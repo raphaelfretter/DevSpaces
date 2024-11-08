@@ -71,6 +71,6 @@ events:
 projects:
   - git:
       remotes:
-        origin: https://github.com/musbell2/DevSpacesExample.git
+        origin: https://github.com/raphaelfretter/DevSpaces.git
     ## name must be lowercase
-    name: devspacesexample
+    name: devspaces
