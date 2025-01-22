@@ -1,7 +1,7 @@
 ---
 schemaVersion: 2.2.0
 metadata:
-  name: UniversalDevSpace
+  name: udi8
   displayName: Universal Devspace
   description: Universal DevSpace utilizing quay.io/devfile/universal-developer-image:ubi8-latest
   icon: https://landscape.cncf.io/logos/devfile.svg
@@ -13,21 +13,24 @@ metadata:
 components:
   - name: tools
     container:
-      cpuLimit: 4000m
+      cpuLimit: 3000m
       cpuRequest: 500m
-      memoryLimit: 6G
+      memoryLimit: 4G
       memoryRequest: 512Mi
       env:
         #### ENVIRONMENT VARIABLES PASSED DIRECTLY TO THE WORKSPACE/CONTAINER
 
           # enables "podman run" within container
-            # The podman build -t <image> . && podman run <image> command will fail. 
-            # Use podman build -t <image> . && podman push <image> && podman run <image> instead.
+          # The podman build -t <localImage> . && podman run <localImage> command will fail. 
+          # image to be tagged/pushed to external registry for it to work.
+          # Use podman build -t <localImage> . && podman tag <localImage> <ExtenalRegistry> && podman push <ExtenalRegistry> && podman run <image> instead.
+            ## To open bash session to container, -i with podman run won't work, so you will need to:
+                # podman run -d bitnami/nginx:latest
+                # podman ps -a
+                # podman exec -it 98504TheContainerID /bin/bash
         - name: KUBEDOCK_ENABLED ## https://eclipse.dev/che/docs/stable/end-user-guide/running-containers-with-kubedock/
           value: 'true'
-        - name: CONTAINER_HOST
-          value: 'tcp://127.0.0.1:2475'
-          
+
           # registry token path to be used for podman authentication. Created from "RegistryAuthTokenSecret.yaml"
         - name: REGISTRY_AUTH_FILE ## https://docs.podman.io/en/latest/markdown/podman-login.1.html#authfile-path
           value: /etc/secret/devworkspace-container-registry-dockercfg/.dockerconfigjson
@@ -55,7 +58,7 @@ components:
           targetPort: 8080
           exposure: public
           protocol: http
-
+      #image: quay.io/devspaces/udi-rhel8:latest
       image: quay.io/devfile/universal-developer-image:ubi8-latest
 
 commands:
